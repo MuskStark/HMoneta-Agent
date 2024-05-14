@@ -1,0 +1,8 @@
+### Send POST request with json body
+POST http://localhost:477/agent/api/config
+Content-Type: application/json
+
+{
+  "reportUrl": "http://localhost:8080/agent/api/report",
+  "agentId": 12345678900
+}
