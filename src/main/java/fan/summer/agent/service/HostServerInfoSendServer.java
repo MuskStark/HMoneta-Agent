@@ -46,6 +46,7 @@ public class HostServerInfoSendServer {
         LOG.info("开始报送系统信息");
         LOG.info("是否允许上报：{}", this.canReport);
         if(this.canReport) {
+            info.setAgentId(config.getAgentId());
             // 请求头，设置Content-Type为application/json
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
