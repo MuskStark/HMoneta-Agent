@@ -1,6 +1,9 @@
 package fan.summer.agent.service;
 
 import fan.summer.agent.entity.SystemInfoEntity;
+import fan.summer.agent.task.SystemInfoReporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import oshi.SystemInfo;
 import oshi.hardware.ComputerSystem;
@@ -20,7 +23,10 @@ import java.util.List;
 @Service
 public class SystemInfoService {
 
+    private final static Logger LOG = LoggerFactory.getLogger(SystemInfoService.class);
+
     public SystemInfoEntity getSystemInfo(){
+        LOG.info("开始获取系统信息");
         SystemInfoEntity info = new SystemInfoEntity();
         // 初始化系统信息对象
         SystemInfo si = new SystemInfo();
@@ -42,6 +48,7 @@ public class SystemInfoService {
         // TODO：获取网络使用信息
         List<NetworkIF> networkIFs = hal.getNetworkIFs();
         info.setNetworkIp(networkIFs);
+        LOG.info("完成系统信息获取");
         return info;
     }
 }

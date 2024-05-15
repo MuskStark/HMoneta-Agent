@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import fan.summer.agent.entity.ConfigEntity;
 import fan.summer.agent.entity.SystemInfoEntity;
 import jakarta.annotation.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class HostServerInfoSendServer {
 
+    private final static Logger LOG = LoggerFactory.getLogger(HostServerInfoSendServer.class);
     private ConfigEntity config;
     @Resource
     private RestTemplate restTemplate;
@@ -40,6 +43,8 @@ public class HostServerInfoSendServer {
      * @throws JsonProcessingException 当转换系统信息实体为JSON字符串时发生错误。
      */
     public boolean sendSysInfo(SystemInfoEntity info) throws JsonProcessingException {
+        LOG.info("开始报送系统信息");
+        LOG.info("是否允许上报：{}", this.canReport);
         if(this.canReport) {
             // 请求头，设置Content-Type为application/json
             HttpHeaders headers = new HttpHeaders();
@@ -47,11 +52,16 @@ public class HostServerInfoSendServer {
             ObjectMapper mapper = new ObjectMapper();
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
             String json = mapper.writeValueAsString(info);
+            LOG.info("待报送信息:{}", json);
             HttpEntity<String> entity = new HttpEntity<String>(json, headers);
+            String reportUrl = config.getReportUrl()+"/agent/api/report";
+            LOG.info("报送地址:{}", reportUrl);
             // 发送POST请求并获取响应
-            ResponseEntity<String> response = restTemplate.exchange(config.getReportUrl(), HttpMethod.POST, entity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(reportUrl, HttpMethod.POST, entity, String.class);
+            LOG.info("报送结果:{}", response.getStatusCode());
             return true;
         }else {
+            LOG.error("报送失败");
             return false;
         }
     }
