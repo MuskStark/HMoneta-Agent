@@ -39,6 +39,7 @@ public class SystemInfoService {
         // 获取计算机制造商
         computerSystem.getManufacturer();
         // TODO：获取CPU使用信息
+        // 每个核心在500毫秒内使用率
         info.setCupLoad(hal.getProcessor().getProcessorCpuLoad(500L));
         // TODO：获取内存使用信息
         info.setTotalMemory(hal.getMemory().getTotal());
