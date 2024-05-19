@@ -3,3 +3,5 @@ spring:
     name: HMoneta-Agent
 server:
   port: 477
+agent:
+  version: @project.version@
