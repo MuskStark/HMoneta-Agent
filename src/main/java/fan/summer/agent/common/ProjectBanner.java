@@ -13,15 +13,6 @@ import java.io.PrintStream;
  * @Date 2024/5/19
  */
 public class ProjectBanner implements Banner {
-    private static final String v =
-            " _    _  __  __                           _        \n" +
-                    "| |  | ||  \\/  |                         | |       \n" +
-                    "| |__| || \\  / | ___  _ __ ___   ___  ___| |_ __ _ \n" +
-                    "|  __  || |\\/| |/ _ \\| '_ ` _ \\ / _ \\/ __| __/ _` |\n" +
-                    "| |  | || |  | | (_) | | | | | |  __/ (__| || (_| |\n" +
-                    "|_|  |_||_|  |_|\\___/|_| |_| |_|\\___|\\___|\\__\\__,_|\n" +
-                    "                                                  \n" +
-                    "                    HMoneta-Agent (ver)               \n";
     private static final String BANNER =
             " _   _   __  __                          _                        _                             _   \n" +
                     "| | | | |  \\/  |   ___    _ __     ___  | |_    __ _             / \\      __ _    ___   _ __   | |_ \n" +
