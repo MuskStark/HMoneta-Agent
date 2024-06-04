@@ -6,10 +6,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import fan.summer.agent.entity.ConfigEntity;
 import fan.summer.agent.entity.SystemInfoEntity;
 import jakarta.annotation.Resource;
+import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -23,17 +26,13 @@ import org.springframework.web.client.RestTemplate;
 public class HostServerInfoSendServer {
 
     private final static Logger LOG = LoggerFactory.getLogger(HostServerInfoSendServer.class);
+    @Setter
+    @Getter
     private ConfigEntity config;
     @Resource
     private RestTemplate restTemplate;
 
-    private boolean canReport = false;
 
-    public void setConfig(ConfigEntity config){
-        assert config != null;
-        this.config = config;
-        this.canReport = true;
-    }
 
     /**
      * 发送系统信息至指定URL。
@@ -43,9 +42,10 @@ public class HostServerInfoSendServer {
      * @throws JsonProcessingException 当转换系统信息实体为JSON字符串时发生错误。
      */
     public boolean sendSysInfo(SystemInfoEntity info) throws JsonProcessingException {
+        boolean canReport = !ObjectUtils.isEmpty(config);
         LOG.info("开始报送系统信息");
-        LOG.info("是否允许上报：{}", this.canReport);
-        if(this.canReport) {
+        LOG.info("是否允许上报：{}", canReport);
+        if(canReport) {
             info.setAgentId(config.getAgentId());
             // 请求头，设置Content-Type为application/json
             HttpHeaders headers = new HttpHeaders();
@@ -55,7 +55,7 @@ public class HostServerInfoSendServer {
             String json = mapper.writeValueAsString(info);
             LOG.info("待报送信息:{}", json);
             HttpEntity<String> entity = new HttpEntity<String>(json, headers);
-            String reportUrl = config.getReportUrl()+"/agent/api/report";
+            String reportUrl = config.getReportUrl()+"/hm/master/report";
             LOG.info("报送地址:{}", reportUrl);
             // 发送POST请求并获取响应
             ResponseEntity<String> response = restTemplate.exchange(reportUrl, HttpMethod.POST, entity, String.class);
