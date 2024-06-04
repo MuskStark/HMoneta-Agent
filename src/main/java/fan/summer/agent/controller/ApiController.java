@@ -30,4 +30,14 @@ public class ApiController {
         sendServer.setConfig(config);
         return ApiRestResponse.success();
     }
+
+    @GetMapping("/is_alive")
+    public ApiRestResponse<Boolean> responseAliveCheck(){
+        return ApiRestResponse.success(true);
+    }
+
+    @GetMapping("/report-config")
+    public ConfigEntity reportConfig() {
+        return sendServer.getConfig();
+    }
 }
